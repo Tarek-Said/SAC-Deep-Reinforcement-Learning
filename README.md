@@ -1,6 +1,6 @@
 # Soft Actor Critic Reinforce Learning for autonomous manipulator using Gazebo and MATLAB
 
-In this tutorial, we will explain how to built successfully a model of SAC-DRL to train Kinova robot arm to manipulate in an enviroment.
+In this tutorial, we will explain how to built successfully a model of SAC-DRL to train Kinova robot arm to manipulate in a 3D enviroment. The objective of the SAC is learn how to control joints velocity to reach the target position.
 
 Before we start, please download and install [***VMware player***](https://www.vmware.com/go/getplayer-win) virtual machine player. And [***ros_melodic_dashing_gazebov9_linux_win_v3.zip***](https://ssd.mathworks.com/supportfiles/ros/virtual_machines/v2/ros_melodic_dashing_gazebov9_linux_win_v3.zip) virtual machine.
 
@@ -64,6 +64,8 @@ Termination function is what ends the training episode either the target is ache
 
 ## 3) MATLAB script
 
+Configre time for each training episode `Tfinal` with the sample time. Note that the time for each step = `Tfinal` / `sampleTime`.
+
 ```MATLAB
 mdl = "kinova";
 Tfinal = 10;
@@ -73,6 +75,10 @@ agentBlk = mdl + "/Agent";
 open_system(mdl)
 open_system(mdl + "/Environment")
 ```
+
+Define the number of observations wich are in our case, 3 joints velocity + 3 distance errors for X Y Z + comulative reward.
+
+Also, state the upper and the lower limits of the collected observations.
 
 ```MATLAB
 % define observation parameters...
@@ -84,17 +90,24 @@ obsInfo = rlNumericSpec([observation 1],...
 numObservations = obsInfo.Dimension(1);
 ```
 
+As what has been done with observations, actions parameters should be defined as well.
+
 ```MATLAB
 % define action parameters
 numActions = 3;
 actInfo = rlNumericSpec([numActions 1],...
     "LowerLimit",-1,...
     "UpperLimit",1);
+```
 
+Specify the model, agent block name, observation, and action variables to `rlSimulinkEnv`.
+
+```MATLAB
 % build environment interface
 env = rlSimulinkEnv(mdl,agentBlk,obsInfo,actInfo);
 env.UseFastRestart = "off"
 ```
+
 
 ```MATLAB
 % SAC agent-critic network 
