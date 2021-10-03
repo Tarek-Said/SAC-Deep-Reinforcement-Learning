@@ -21,7 +21,7 @@ This example will help you to understand the way to obtain data from gazebo and 
 ```xml
 <plugin name="GazeboPlugin" filename="lib/libGazeboCoSimPlugin.so"><portNumber>14581</portNumber></plugin>
 ```
-![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/plugin.png)
+![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/plugin.png)
 
 3) From `Desktop`, run `Example World 1` file and wait for gazebo to launch.
 
@@ -37,29 +37,29 @@ This part shows the the simulink setup in `kinova.slx`.
 * Part 6: the function that terminates the training episode.
 * Part 7: sending the output actions from the SAC to gazebo.
 
-![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Kinova.jpg)
+![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Kinova.jpg)
 
 Double click on `gazebo pacer` and gonfigure the `ip adress` of the virtual machine. If the plugin works fine, it should connect successfully to gazebo.
 
-![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Gazebo%20Pacer.png)
+![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Gazebo%20Pacer.png)
 
-![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Connect%20to%20gazebo.png)
+![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Connect%20to%20gazebo.png)
 
 As in part 5, the SAC is setted to observe information from joints 1, 2, and 4.
 
-![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Observations.png)
+![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Observations.png)
 
 While SAC is training, joints velocity are the outputs of the SAC to control the robot. And it ranges from [-1, 1].
 
-![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Joint%20actions.png)
+![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Joint%20actions.png)
 
 The reward function is calculated using the normal distripution function.
 
-![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Reward%20function.png)
+![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Reward%20function.png)
 
 Termination function is what ends the training episode either the target is acheived or limits are being crossed.
 
-![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Termination%20function.png)
+![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Termination%20function.png)
 
 
 ## 3) MATLAB script
