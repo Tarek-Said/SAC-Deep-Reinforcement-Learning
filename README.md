@@ -21,9 +21,16 @@ This example will help you to understand the way to obtain data from gazebo and 
 ```xml
 <plugin name="GazeboPlugin" filename="lib/libGazeboCoSimPlugin.so"><portNumber>14581</portNumber></plugin>
 ```
+
 ![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/plugin.png)
 
-3) From `Desktop`, run `Example World 1` file and wait for gazebo to launch.
+3) Open the terminal and excute the following command to export the plugin.
+
+```xml
+$ export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:/home/user/src/GazeboPlugin/export
+```
+
+4) From `Desktop`, run `Example World 1` file and wait for gazebo to launch.
 
 ## 2) Simulink block diagrame
 
@@ -47,17 +54,43 @@ Double click on `gazebo pacer` and gonfigure the `ip adress` of the virtual mach
 
 As in part 5, the SAC is setted to observe information from joints 1, 2, and 4.
 
+The observations obtained from the manipulator is a matrix of 10 elements, all values are in the range of -1 to 1. Three joints are chosen to be controlled and to obtain data from as well. Each joint gives two observations; joint position, and joint velocity. In addition to the values of the error distances from the current gripper position to the target location over X, Y, and Z axis. Finally, the cumulative reward value is given as the last input observation.
+ 
+1.	Joint 1 velocity
+2.	Joint 1 angle pose
+3.	Joint 2 velocity
+4.	Joint 2 angle pose
+5.	Joint 4 velocity
+6.	Joint 4 angle pose
+7.	Error distance over X
+8.	Error distance over Y
+9.	Error distance over Z
+10.	Reward value
+
+
 ![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Observations.png)
 
 While SAC is training, joints velocity are the outputs of the SAC to control the robot. And it ranges from [-1, 1].
 
 ![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Joint%20actions.png)
 
-The reward function is calculated using the normal distripution function.
+Reward is calculated based on normal distribution function which aims to only maximise the reward exponentially when error distance become smaller.
+
+To obtain a valid reward value lying in between 0 and 1, sigma (σ) requires a manual calibration to get its correct value. The calibration can be done by the following steps:
+1.	Set the robot at the initial position.
+2.	Tune sigma until reward is equal to 0.
+3.	Set the robot at the target position.
+4.	Tune sigma until reward is equal to 1.
+5.	Repeat the first step to assure that reward is in between 0 and 1, from initial to target.
+Instead of the manual calibration, there are different ways to get the correct sigma value computationally. However, manual calibration is used in this project specifically because training process was carried for a single object in a static position. 
 
 ![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Reward%20function.png)
 
-Termination function is what ends the training episode either the target is acheived or limits are being crossed.
+Termination function is what ends the training episode either the target is acheived or limits are being crossed. It allows the model to detect if the robot has successfully achieved the required task or failed to do so. There is only 1cm tolerance over X, Y, and Z, to consider that the robot has reached the target location. 
+
+There is another condition to keep the training process in the right track. It is to check on the obtained reward value from the first step. If the reward is equal to 0, the training episode will be terminated.
+
+One more condition to restrict the robot movement within specific range. This condition aims to prevent the robot from clashing with itself, and to prevent the robot from moving further away from the target location. The robot is allowed to move within 5cm to 70cm over X axis, and -50cm to 50cm which is the table width. In short, the training episode will be terminated if the range is crossed over. 
 
 ![](https://github.com/Tarek-Said/SAC-Deep-Reinforcement-Learning/blob/main/Pictures/Termination%20function.png)
 
